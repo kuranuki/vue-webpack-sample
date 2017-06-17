@@ -10,7 +10,8 @@
 
         <ul id="todos">
           <li v-for="todo in todos">
-            {{ todo.item }}
+            <el-checkbox v-model="todo.done"></el-checkbox>
+            <span v-bind:class="{ done: todo.done }">{{ todo.item }}</span>
             <i class="el-icon-delete todo-delete" @click="deleteTodo(todo)"></i>
           </li>
         </ul>
@@ -34,6 +35,7 @@ export default {
       event.preventDefault()
       if (this.newtodo === '') return
       this.todos.push({
+        done: false,
         item: this.newtodo
       })
       this.newtodo = ''
@@ -62,5 +64,9 @@ export default {
 .todo-delete {
   font-size: 8px;
   cursor: pointer;
+}
+
+.done {
+  text-decoration: line-through;
 }
 </style>
