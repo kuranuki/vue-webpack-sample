@@ -16,12 +16,6 @@
         </ul>
       </el-col>
     </el-row>
-
-    <h2>Essential Links</h2>
-    <i class="el-icon-edit"></i>
-    <i class="el-icon-share"></i>
-    <i class="el-icon-delete"></i>
-    <el-button type="primary" icon="search">Search</el-button>
   </div>
 </template>
 
