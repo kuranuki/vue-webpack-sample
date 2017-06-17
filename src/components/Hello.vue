@@ -21,6 +21,10 @@
     <div class="block">
       <el-color-picker v-model="color"></el-color-picker>
     </div>
+    <i class="el-icon-edit"></i>
+    <i class="el-icon-share"></i>
+    <i class="el-icon-delete"></i>
+    <el-button type="primary" icon="search">Search</el-button>
   </div>
 </template>
 
