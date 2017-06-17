@@ -1,22 +1,23 @@
 <template>
   <div class="todo">
 
-    <el-row :gutter="20">
-      <el-col :span="6" :offset="9">
-        <h1>{{ msg }}</h1>
+    <h1>{{ msg }}</h1>
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form-item>
+        <el-input placeholder="何する？" v-model="newtodo" @keyup.enter.native="addTodo"></el-input>
+      </el-form-item><el-form-item>
+        <el-button type="primary" @click="addTodo">追加</el-button>
+      </el-form-item>
+    </el-form>
 
-        <el-input placeholder="何する？" v-model="newtodo"></el-input>
-        <el-button @click="addTodo">追加</el-button>
+    <ul id="todos">
+      <li v-for="todo in todos">
+        <el-checkbox v-model="todo.done"></el-checkbox>
+        <span v-bind:class="{ done: todo.done }">{{ todo.item }}</span>
+        <i class="el-icon-delete todo-delete" @click="deleteTodo(todo)"></i>
+      </li>
+    </ul>
 
-        <ul id="todos">
-          <li v-for="todo in todos">
-            <el-checkbox v-model="todo.done"></el-checkbox>
-            <span v-bind:class="{ done: todo.done }">{{ todo.item }}</span>
-            <i class="el-icon-delete todo-delete" @click="deleteTodo(todo)"></i>
-          </li>
-        </ul>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
