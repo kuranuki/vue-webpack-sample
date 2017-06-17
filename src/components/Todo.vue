@@ -11,7 +11,7 @@
     </el-form>
 
     <ul id="todos">
-      <li v-for="todo in todos">
+      <li v-for="todo in filteredTodos">
         <el-checkbox v-model="todo.done"></el-checkbox>
         <span v-bind:class="{ done: todo.done }">{{ todo.item }}</span>
         <i class="el-icon-delete todo-delete" @click="deleteTodo(todo)"></i>
@@ -22,6 +22,11 @@
       <span class="todo-count">
         <strong>{{ remaining }}</strong> {{ remaining | pluralize }} left
       </span>
+      <el-radio-group v-model="visibility">
+        <el-radio-button label="all"></el-radio-button>
+        <el-radio-button label="active"></el-radio-button>
+        <el-radio-button label="completed"></el-radio-button>
+      </el-radio-group>
     </div>
 
   </div>
@@ -29,27 +34,37 @@
 
 <script>
 var filters = {
-  all: function (todos) {
+  all (todos) {
     return todos
   },
   active (todos) {
     return todos.filter(function (todo) {
-      return !todo.completed
+      return !todo.done
     })
   },
-  completed: function (todos) {
+  completed (todos) {
     return todos.filter(function (todo) {
-      return todo.completed
+      return todo.done
     })
   }
 }
+
 export default {
   name: 'todo',
   data () {
     return {
       msg: 'Todo App',
       newtodo: '',
-      todos: []
+      todos: [],
+      visibility: 'all'
+    }
+  },
+  computed: {
+    filteredTodos () {
+      return filters[this.visibility](this.todos)
+    },
+    remaining () {
+      return filters.active(this.todos).length
     }
   },
   filters: {
@@ -77,11 +92,6 @@ export default {
         title: 'Title',
         message: h('i', { style: 'color: teal' }, 'This is a reminder')
       })
-    }
-  },
-  computed: {
-    remaining () {
-      return filters.active(this.todos).length
     }
   }
 }
@@ -117,5 +127,9 @@ export default {
 .footer {
   border: 1px solid silver;
   padding: 10px;
+}
+
+.todo-count {
+  margin-right: 10px;
 }
 </style>
