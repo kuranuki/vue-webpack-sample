@@ -27,6 +27,7 @@
         <el-radio-button label="active"></el-radio-button>
         <el-radio-button label="completed"></el-radio-button>
       </el-radio-group>
+      <el-button type="danger" size="mini" @click="removeCompleted" v-show="hasCompleted">Clear completed!</el-button>
     </div>
 
   </div>
@@ -65,6 +66,9 @@ export default {
     },
     remaining () {
       return filters.active(this.todos).length
+    },
+    hasCompleted () {
+      return filters.completed(this.todos).length > 0
     }
   },
   filters: {
@@ -85,6 +89,9 @@ export default {
     deleteTodo (todo) {
       var index = this.todos.indexOf(todo)
       this.todos.splice(index, 1)
+    },
+    removeCompleted () {
+      this.todos = filters.active(this.todos)
     },
     open () {
       const h = this.$createElement
