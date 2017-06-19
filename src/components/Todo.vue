@@ -12,7 +12,7 @@
 
     <ul id="todos">
       <li v-for="todo in filteredTodos">
-        <el-checkbox v-model="todo.done"></el-checkbox>
+        <el-checkbox @change="toggleDone(todo)" v-model="todo.done"></el-checkbox>
         <span v-bind:class="{ done: todo.done }">{{ todo.item }}</span>
         <i class="el-icon-delete todo-delete" @click="deleteTodo(todo)"></i>
       </li>
@@ -34,6 +34,20 @@
 </template>
 
 <script>
+import Firebase from 'firebase'
+let config = {
+  apiKey: 'AIzaSyD4mwsOZ_4rvE2QIanfJtaMDeq2w4f-4mM',
+  authDomain: 'fir-sample-73ae5.firebaseapp.com',
+  databaseURL: 'https://fir-sample-73ae5.firebaseio.com',
+  projectId: 'fir-sample-73ae5',
+  storageBucket: 'fir-sample-73ae5.appspot.com',
+  messagingSenderId: '120430409923'
+}
+
+let app = Firebase.initializeApp(config)
+let db = app.database()
+let todosRef = db.ref('todos')
+
 var filters = {
   all (todos) {
     return todos
@@ -52,11 +66,13 @@ var filters = {
 
 export default {
   name: 'todo',
+  firebase: {
+    todos: todosRef
+  },
   data () {
     return {
       msg: 'Todo App',
       newtodo: '',
-      todos: [],
       visibility: 'all'
     }
   },
@@ -80,18 +96,26 @@ export default {
     addTodo (event) {
       event.preventDefault()
       if (this.newtodo === '') return
-      this.todos.push({
+      todosRef.push({
         done: false,
         item: this.newtodo
       })
       this.newtodo = ''
     },
     deleteTodo (todo) {
-      var index = this.todos.indexOf(todo)
-      this.todos.splice(index, 1)
+      todosRef.child(todo['.key']).remove()
     },
     removeCompleted () {
-      this.todos = filters.active(this.todos)
+      filters.completed(this.todos).forEach((todo) => {
+        todosRef.child(todo['.key']).remove()
+      })
+    },
+    // TODO:まだチェックリストの中身が反映できてない
+    toggleDone (todo) {
+      let todoRef = todosRef.child(todo['.key'])
+      todoRef.update({
+        done: !todoRef.done
+      })
     },
     open () {
       const h = this.$createElement
